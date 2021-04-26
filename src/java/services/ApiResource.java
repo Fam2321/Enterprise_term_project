@@ -13,8 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.ArrayList;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -24,13 +23,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.xml.bind.JAXB;
 import model.DailyReports;
+import model.Province;
+import model.Provinces;
 
 /**
  * REST Web Service
  *
  * @author 60050257
  */
-@Path("api")
+
+@Path("/api")
 public class ApiResource {
 
     @Context
@@ -49,7 +51,7 @@ public class ApiResource {
     @GET
     @Path("/today")
     @Produces(javax.ws.rs.core.MediaType.APPLICATION_XML)
-    public String getXml() throws MalformedURLException, ProtocolException, IOException {
+    public String getToday() throws MalformedURLException, ProtocolException, IOException {
             StringWriter writter = new StringWriter();
             URL urlForGetRequest;
             urlForGetRequest = new URL("https://covid19.th-stat.com/api/open/today");
@@ -118,12 +120,39 @@ public class ApiResource {
             return writter.toString();
     }
 
-    /**
-     * PUT method for updating or creating an instance of ApiResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(javax.ws.rs.core.MediaType.APPLICATION_XML)
-    public void putXml(String content) {
+    @GET
+    @Path("/sum")
+    @Produces(javax.ws.rs.core.MediaType.APPLICATION_XML)
+    public String getSummary() throws MalformedURLException, ProtocolException, IOException {
+            StringWriter writter = new StringWriter();
+            URL urlForGetRequest;
+            urlForGetRequest = new URL("https://covid19.th-stat.com/api/open/cases/sum");
+            String readLine = null;
+            HttpURLConnection conection = (HttpURLConnection) urlForGetRequest.openConnection();
+            conection.setRequestMethod("GET");
+            conection.setRequestProperty("Accept", "*/*");
+            conection.setDoOutput(true);
+            int responseCode = conection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(
+                    new InputStreamReader(conection.getInputStream()));
+                StringBuffer response = new StringBuffer();
+                
+                while ((readLine = in.readLine()) != null) {
+                    response.append(readLine);
+                } in.close();
+                String[] format = response.toString().split("[{}]+");
+                String[] data = format[2].split(",");
+                ArrayList<Province> provinces = new ArrayList<Province>();
+                for(String a:data) {
+                    String[] b = a.split(":");
+                    provinces.add(new Province(b[0], Integer.valueOf(b[1])));
+                }
+                JAXB.marshal(new Provinces(provinces), writter);
+            } else {
+                JAXB.marshal("GET NOT WORKED", writter);
+            }
+            conection.disconnect();
+            return writter.toString();
     }
 }
