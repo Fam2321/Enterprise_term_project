@@ -5,10 +5,12 @@
         <group>
             <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/src/java/services/ApiResource.java</file>
             <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/src/java/services/ApplicationConfig.java</file>
+            <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/src/java/model/Province.java</file>
             <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/src/conf/MANIFEST.MF</file>
             <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/web/index.html</file>
             <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/src/java/config/CorsResponseFilter.java</file>
             <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/src/java/model/DailyReports.java</file>
+            <file>file:/C:/Users/60050257/StudyProjects/TermProjectWebService/src/java/model/Provinces.java</file>
         </group>
     </open-files>
 </project-private>
